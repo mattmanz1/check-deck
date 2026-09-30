@@ -1,2 +1,2 @@
-# check-deck
-a cute little productivity program
+# Check-deck
+A cute little productivity program.
