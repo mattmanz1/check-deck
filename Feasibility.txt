@@ -1,0 +1,37 @@
+Feasibility Study for Tamagotchi Study Buddy App
+Project Members:
+    • Adam Nordick
+    • Megan
+    • Carissa
+    • Matthew
+
+1. Project Idea
+This web app is intended to help improve student’s motivation to study through the use of a reward system and a virtual “buddy” that will levelup as you complete more of your tasks and spend time studying.
+
+2. Main Features (Requirements)
+    • Login/account system
+    • Study time tracker
+    • Task list
+    • Interactive picture of your buddy
+
+3. Users
+The main users of this app will be college students, hoping to improve their studying by tracking the amount of time spent studying, as well as individual homework tasks.
+
+4. Market Feasibility / Competitor Analysis
+There are a plethora of similar apps in the workspace, aiming to connect people with others who are studying similar subjects, or with AI powered tutors. Our app doesn’t plan on connecting people or focusing on learning, but instead focus on their motivation through the use of a virtual friend.
+
+5. Tools & Skills Needed
+We are mainly using html, css, and javascript. Potentially firebase to host the website. We are all in wdd130, so we are learning these skills.
+6. Time & Schedule
+    • How many weeks do you have? 12
+    • Break down the work:
+        ◦ Plan & design: 2 weeks
+        ◦ Build pages: 4 weeks
+        ◦ Add features: 4 weeks
+        ◦ Test & present: 2 weeks
+
+7. Challenges & Solutions
+Scope creep will likely be an issue for this project, and finishing on time will likely be an issue. To combat this, we are going to set out a base set of features that absolutely have to be done, and work on completing those before anything else.
+
+8. Conclusion
+This project is most likely doable with our time and skills. It is worth doing because we think it is a cool idea that we would actually use.
