@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/x-icon" href="images/study-buddy-favicon.png">
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy | Home</title>
+  </head>
+  <body>
+    <header>Welcome back, <span class="username">User123</span>!</header>
+    <section id="checklist">
+      <div class="checklist-heading">
+        <p id="task-count" class="task-count">0 tasks</p>
+      </div>
+
+      <form id="task-form" class="task-form">
+        <label class="sr-only" for="task-input">New task</label>
+        <input id="task-input" name="task" type="text" maxlength="120" placeholder="What needs doing?" required>
+        <label class="timer-option" for="add-timer">
+          <input id="add-timer" type="checkbox">
+          Add timer
+        </label>
+        <button class="primary-button" type="submit">Add task</button>
+      </form>
+
+      <ul id="task-list" class="task-list" aria-live="polite"></ul>
+      <p id="empty-state" class="empty-state">Nothing on your list yet. Add a task to get started.</p>
+    </section>
+    <script src="checklist.js" defer></script>
+  </body>
+</html>
