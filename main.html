@@ -9,12 +9,26 @@
     <title>Study Buddy | Home</title>
   </head>
   <body>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="true" aria-label="Collapse navigation">
+      <span aria-hidden="true">×</span>
+    </button>
     <header>Welcome back, <span class="username">User123</span>!</header>
+    <aside>
+      <nav id="main-nav">
+        <!--Sidebar for navigating pages. Main game page, settings, account page? more to come later-->
+        <a href="main.html">Game</a>
+        <a href="account.html">Account</a>
+        <a href="index.html">Settings</a>
+        <a href="town.html"></a>
+      </nav>
+    </aside>
+    <section id="buddy">
+      
+    </section>
     <section id="checklist">
       <div class="checklist-heading">
         <p id="task-count" class="task-count">0 tasks</p>
       </div>
-
       <form id="task-form" class="task-form">
         <label class="sr-only" for="task-input">New task</label>
         <input id="task-input" name="task" type="text" maxlength="120" placeholder="What needs doing?" required>
@@ -29,5 +43,6 @@
       <p id="empty-state" class="empty-state">Nothing on your list yet. Add a task to get started.</p>
     </section>
     <script src="scripts/checklist.js" defer></script>
+    <script src="scripts/sidebar.js" defer></script>
   </body>
 </html>
