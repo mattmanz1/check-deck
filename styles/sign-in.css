@@ -1,0 +1,161 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+/* General page styling */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f2f5ec;
+    color: #24392e;
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+/* Simple navigation */
+nav {
+    padding: 20px;
+}
+
+nav a {
+    color: #315f49;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+/* Center the login card */
+.auth-container {
+    width: min(90%, 420px);
+    margin: 60px auto;
+    padding: 30px;
+    background-color: white;
+    border: 3px solid #315f49;
+    border-radius: 16px;
+    box-shadow: 6px 6px 0 #c6d6c8;
+}
+
+/* Headings */
+.auth-container h1 {
+    margin: 0;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.auth-container > p {
+    text-align: center;
+    color: #607268;
+}
+
+#form-title {
+    text-align: center;
+}
+
+/* Login and signup tabs */
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 25px 0;
+}
+
+.auth-tabs button {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #315f49;
+    border-radius: 8px;
+    background-color: white;
+    color: #315f49;
+    font: inherit;
+    cursor: pointer;
+}
+
+.auth-tabs button.active {
+    background-color: #315f49;
+    color: white;
+}
+
+/* Form fields */
+form > div {
+    margin-bottom: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #cbd8cc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+/* Main submit button */
+#submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #315f49;
+    color: white;
+    font: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#submit-btn:hover {
+    background-color: #458663;
+}
+
+/* Forgot password */
+#forgot-password {
+    display: block;
+    margin: 15px auto;
+    border: none;
+    background: none;
+    color: #315f49;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Error and success messages */
+#auth-message {
+    min-height: 20px;
+    text-align: center;
+}
+
+/* Hide signup-only fields */
+[hidden] {
+    display: none !important;
+}
+
+/* Keyboard accessibility */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+    outline: 3px solid #e4a746;
+    outline-offset: 2px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .auth-container {
+        margin: 30px auto;
+        padding: 20px;
+    }
+}

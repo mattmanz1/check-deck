@@ -1,12 +1,84 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/x-icon" href="images/study-buddy-favicon.png">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Buddy | Sign in</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="images/study-buddy-favicon.png">
+    <link rel="stylesheet" href="styles/sign-in.css">
+
+    <title>Study Buddy | Sign In</title>
 </head>
+
 <body>
-  
+
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="auth-container">
+
+            <h1>Study Buddy</h1>
+            <p>Your little companion to big achievements!</p>
+
+            <!-- Buttons to switch between forms -->
+            <div class="auth-tabs">
+                <button id="login-tab">Log In</button>
+                <button id="signup-tab">Sign Up</button>
+            </div>
+
+            <h2 id="form-title">Welcome Back!</h2>
+
+            <!-- Login and signup form -->
+            <form id="auth-form">
+
+                <!-- Display name for new accounts -->
+                <div id="name-field" hidden>
+                    <label for="display-name">Display Name:</label>
+                    <input type="text" id="display-name">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+
+                <!-- Confirm password for signup -->
+                <div id="confirm-field" hidden>
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password">
+                </div>
+
+                <!-- Show password -->
+                <label>
+                    <input type="checkbox" id="show-password">
+                    Show Password
+                </label>
+
+                <br>
+
+                <!-- Submit form -->
+                <button type="submit" id="submit-btn">Log In</button>
+
+                <p id="auth-message"></p>
+
+            </form>
+
+        </section>
+    </main>
+
+    <script type="module" src="scripts/auth.js"></script>
+
 </body>
 </html>
