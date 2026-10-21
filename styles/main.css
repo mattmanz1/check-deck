@@ -1,3 +1,17 @@
+:root {
+	--peach: #fbbbad;
+	--seafoam: #30e1b9;
+	--turquoise: #30e1b9;
+	--sea: #0b8a8f;
+	--dark-sea: #32535f;
+	--blue: #4a7a96;
+	--deep-sea: #333f58;
+	--black: #292831;
+	--maroon: #411d31;
+	--red: #631b34;
+	--pink: #ee8695;
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -6,8 +20,8 @@ body {
 	min-height: 100vh;
 	margin: 0;
 	padding: 0 24px 64px;
-	background: #f2f5ec;
-	color: #24392e;
+	background: var(--peach);
+	color: var(--deep-sea);
 	font-family: "Trebuchet MS", sans-serif;
 }
 
@@ -18,9 +32,9 @@ nav {
 	position: fixed;
 	z-index: 10;
 	flex-direction: column;
-	color: blue;
+	color: var(--peach);
 	line-height: 2em;
-	background: rgba(0,0,0,.8);
+	background: var(--black);
 	top: 0;
 	left: 0;
 	padding-top: 52px;
@@ -33,6 +47,14 @@ body.sidebar-collapsed nav {
 	transform: translateX(-100%);
 }
 
+#buddy {
+	display: block;
+	height: 80vh;
+	background: var(--sea);
+	margin: 0;
+	justify-content: center;
+}
+
 .nav-toggle {
 	position: fixed;
 	top: 12px;
@@ -40,10 +62,10 @@ body.sidebar-collapsed nav {
 	z-index: 11;
 	width: 38px;
 	height: 38px;
-	border: 1px solid #cbd8cc;
+	border: 1px solid var(--dark-sea);
 	border-radius: 5px;
-	background: #fff;
-	color: #24392e;
+	background: var(--peach);
+	color: var(--deep-sea);
 	font-size: 1.5rem;
 	line-height: 1;
 }
@@ -55,15 +77,15 @@ nav a {
 header {
 	margin: 0 -24px;
 	padding: 22px 24px;
-	background: yellowgreen;
-	color: blue;
+	background: var(--seafoam);
+	color: var(--deep-sea);
 	font-size: 3em;
 	font-weight: 700;
 	text-align: center;
 }
 
 .username {
-	color: navy;
+	color: var(--maroon);
 }
 
 #checklist {
@@ -81,7 +103,7 @@ header {
 
 .eyebrow {
 	margin: 0 0 8px;
-	color: #66816f;
+	color: var(--dark-sea);
 	font-size: 0.75rem;
 	font-weight: 700;
 	letter-spacing: 0.12em;
@@ -94,7 +116,7 @@ h1 {
 
 .task-count {
 	margin: 0 0 5px;
-	color: #607268;
+	color: var(--dark-sea);
 	white-space: nowrap;
 }
 
@@ -103,8 +125,8 @@ h1 {
 	align-items: center;
 	gap: 12px;
 	padding: 14px;
-	background: #fff;
-	border: 1px solid #dce5d9;
+	background: var(--peach);
+	border: 1px solid var(--dark-sea);
 	border-radius: 8px;
 }
 
@@ -112,7 +134,7 @@ h1 {
 	min-width: 0;
 	flex: 1;
 	padding: 11px 12px;
-	border: 1px solid #cbd8cc;
+	border: 1px solid var(--dark-sea);
 	border-radius: 5px;
 	color: inherit;
 	font: inherit;
@@ -122,7 +144,7 @@ h1 {
 	display: flex;
 	align-items: center;
 	gap: 7px;
-	color: #43594b;
+	color: var(--dark-sea);
 	font-size: 0.9rem;
 	white-space: nowrap;
 }
@@ -143,8 +165,8 @@ button {
 	padding: 8px 14px;
 	border: 0;
 	border-radius: 5px;
-	background: #315f49;
-	color: white;
+	background: var(--sea);
+	color: var(--peach);
 	font-weight: 700;
 }
 
@@ -158,18 +180,18 @@ button {
 
 .task-item {
 	padding: 16px;
-	background: #fff;
-	border: 1px solid #dce5d9;
-	border-left: 4px solid #c6d6c8;
+	background: var(--peach);
+	border: 1px solid var(--dark-sea);
+	border-left: 4px solid var(--blue);
 	border-radius: 7px;
 }
 
 .task-item[data-status="in-progress"] {
-	border-left-color: #e4a746;
+	border-left-color: var(--pink);
 }
 
 .task-item[data-status="completed"] {
-	border-left-color: #458663;
+	border-left-color: var(--sea);
 }
 
 .task-main,
@@ -191,7 +213,7 @@ button {
 }
 
 [data-status="completed"] .task-title {
-	color: #718076;
+	color: var(--dark-sea);
 	text-decoration: line-through;
 }
 
@@ -199,20 +221,20 @@ button {
 .timer-controls input {
 	min-height: 38px;
 	padding: 6px 9px;
-	border: 1px solid #cbd8cc;
+	border: 1px solid var(--dark-sea);
 	border-radius: 5px;
-	background: #fff;
-	color: #24392e;
+	background: var(--peach);
+	color: var(--deep-sea);
 }
 
 .remove-button,
 .timer-toggle {
 	min-height: 38px;
 	padding: 7px 10px;
-	border: 1px solid #cbd8cc;
+	border: 1px solid var(--dark-sea);
 	border-radius: 5px;
-	background: #fff;
-	color: #43594b;
+	background: var(--peach);
+	color: var(--dark-sea);
 }
 
 .timer-toggle {
@@ -226,12 +248,12 @@ button {
 	gap: 12px;
 	margin-top: 14px;
 	padding-top: 13px;
-	border-top: 1px solid #e7ece5;
+	border-top: 1px solid var(--dark-sea);
 }
 
 .timer-display {
 	min-width: 66px;
-	color: #254b3b;
+	color: var(--deep-sea);
 	font-size: 1.35rem;
 	font-variant-numeric: tabular-nums;
 	font-weight: 700;
@@ -252,13 +274,13 @@ button {
 }
 
 .timer-controls .stop-timer {
-	background: #e9eee8;
-	color: #31483a;
+	background: var(--blue);
+	color: var(--peach);
 }
 
 .empty-state {
 	margin: 28px 0;
-	color: #607268;
+	color: var(--dark-sea);
 	text-align: center;
 }
 
@@ -275,7 +297,7 @@ button {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-	outline: 3px solid #e4a746;
+	outline: 3px solid var(--pink);
 	outline-offset: 2px;
 }
 

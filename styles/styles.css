@@ -1,6 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
+:root {
+	--peach: #fbbbad;
+	--seafoam: #30e1b9;
+	--turquoise: #30e1b9;
+	--sea: #0b8a8f;
+	--dark-sea: #32535f;
+	--blue: #4a7a96;
+	--deep-sea: #333f58;
+	--black: #292831;
+	--maroon: #411d31;
+	--red: #631b34;
+	--pink: #ee8695;
+}
+
 body {
-  background-color: lightblue;
+  background-color: var(--turquoise);
   font-family: "Pixelify Sans", sans-serif;
 }
