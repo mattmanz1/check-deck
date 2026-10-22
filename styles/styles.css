@@ -1,20 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
 :root {
-	--peach: #fbbbad;
-	--seafoam: #30e1b9;
-	--turquoise: #30e1b9;
-	--sea: #0b8a8f;
-	--dark-sea: #32535f;
-	--blue: #4a7a96;
-	--deep-sea: #333f58;
-	--black: #292831;
-	--maroon: #411d31;
-	--red: #631b34;
-	--pink: #ee8695;
+  --peach: #fbbbad;
+  --seafoam: #30e1b9;
+  --turquoise: #30e1b9;
+  --sea: #0b8a8f;
+  --dark-sea: #32535f;
+  --blue: #4a7a96;
+  --deep-sea: #333f58;
+  --black: #292831;
+  --maroon: #411d31;
+  --red: #631b34;
+  --pink: #ee8695;
 }
 
 body {
-  background-color: var(--turquoise);
+  background-color: var(--seafoam);
   font-family: "Pixelify Sans", sans-serif;
+  margin: 0px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--dark-sea);
+  font-size: 2em;
+  color: var(--pink);
+}
+
+nav a {
+  padding: 5px 20px;
+  margin: 10px;
+  background-color: var(--sea);
+  border-radius: 10px;
 }

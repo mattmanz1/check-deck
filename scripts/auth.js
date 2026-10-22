@@ -1,4 +1,3 @@
-console.log("StudyBuddy JavaScript is working!");
 // Find the buttons on our HTML page
 const loginButton = document.getElementById("login-tab");
 const signupButton = document.getElementById("signup-tab");
@@ -32,4 +31,18 @@ loginButton.addEventListener("click", function() {
 // Prevent the unfinished form from submitting
 document.getElementById("auth-form").addEventListener("submit", function(event) {
     event.preventDefault();
+});
+
+const showPassword = document.getElementById("show-password");
+const passwordFields = [
+    document.getElementById("password"),
+    document.getElementById("confirm-password")
+];
+
+showPassword.addEventListener("change", () => {
+    const inputType = showPassword.checked ? "text" : "password";
+
+    passwordFields.forEach((field) => {
+        field.type = inputType;
+    });
 });

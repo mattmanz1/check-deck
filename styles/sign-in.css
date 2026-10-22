@@ -93,7 +93,7 @@ input[type="text"] {
     padding: 10px;
     border: 2px solid #cbd8cc;
     border-radius: 6px;
-    font: inherit;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .checkbox-label {
