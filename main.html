@@ -1,48 +1,132 @@
+
 <!DOCTYPE html>
-<!--I intend for this page to basicaly be the page that contains the game-->
-<html>
+<html lang="en">
   <head>
-    <link rel="icon" type="image/x-icon" href="images/study-buddy-favicon.png">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="images/study-buddy-favicon.png"
+    >
     <link rel="stylesheet" href="styles/main.css">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Study Buddy | Home</title>
   </head>
-  <body class="sidebar-collapsed">
-    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Expand navigation">
-      <span aria-hidden="true">☰</span>
+
+  <body>
+    <button
+      id="nav-toggle"
+      class="nav-toggle"
+      type="button"
+      aria-controls="main-nav"
+      aria-expanded="true"
+      aria-label="Collapse navigation"
+    >
+      <span aria-hidden="true">×</span>
     </button>
-    <header>Welcome back, <span class="username">User123</span>!</header>
-    <aside>
+
+    <header class="top-header">
+      Welcome back, <span class="username">User123</span>!
+    </header>
+
+    <aside class="sidebar">
       <nav id="main-nav">
-        <!--Sidebar for navigating pages. Main game page, settings, account page? more to come later-->
         <a href="main.html">Game</a>
         <a href="account.html">Account</a>
         <a href="index.html">Settings</a>
-        <a href="town.html"></a>
+        <a href="town.html">Town</a>
       </nav>
     </aside>
-    <section id="buddy">
-      <img src="images/buddy.png" alt="Your study buddy">
-    </section>
-    <section id="checklist">
-      <div class="checklist-heading">
-        <p id="task-count" class="task-count">0 tasks</p>
-      </div>
-      <form id="task-form" class="task-form">
-        <label class="sr-only" for="task-input">New task</label>
-        <input id="task-input" name="task" type="text" maxlength="120" placeholder="What needs doing?" required>
-        <label class="timer-option" for="add-timer">
-          <input id="add-timer" type="checkbox">
-          Add timer
-        </label>
-        <button class="primary-button" type="submit">Add task</button>
-      </form>
 
-      <ul id="task-list" class="task-list" aria-live="polite"></ul>
-      <p id="empty-state" class="empty-state">Nothing on your list yet. Add a task to get started.</p>
+    <main class="main-screen">
+      <section id="buddy" class="buddy-area">
+        <div class="welcome-panel">
+          <h1>Study Buddy</h1>
+          <p>Your space to focus, study, and grow.</p>
+
+          <div
+            class="buddy-placeholder"
+            aria-label="Study Buddy character"
+          >
+            📚
+          </div>
+
+          <p class="buddy-message">
+            Ready to get things done? Add a task below to get started!
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Expandable task panel -->
+    <section
+      id="checklist"
+      class="task-panel collapsed"
+      aria-label="Task list"
+    >
+      <button
+        id="task-panel-toggle"
+        class="task-panel-toggle"
+        type="button"
+        aria-controls="task-panel-content"
+        aria-expanded="false"
+        aria-label="Expand task list"
+      >
+        <span class="panel-handle" aria-hidden="true"></span>
+        <span class="panel-toggle-text">My Tasks</span>
+        <span id="task-count" class="task-count">0 tasks</span>
+        <span class="panel-arrow" aria-hidden="true">⌃</span>
+      </button>
+
+      <div
+        id="task-panel-content"
+        class="task-panel-content"
+        inert
+      >
+        <div class="checklist-heading">
+          <h2>My Tasks</h2>
+        </div>
+
+        <form id="task-form" class="task-form">
+          <label class="sr-only" for="task-input">
+            New task
+          </label>
+
+          <input
+            id="task-input"
+            name="task"
+            type="text"
+            maxlength="120"
+            placeholder="What needs doing?"
+            required
+          >
+
+          <label class="timer-option" for="add-timer">
+            <input id="add-timer" type="checkbox">
+            Add timer
+          </label>
+
+          <button class="primary-button" type="submit">
+            Add task
+          </button>
+        </form>
+
+        <ul
+          id="task-list"
+          class="task-list"
+          aria-live="polite"
+        ></ul>
+
+        <p id="empty-state" class="empty-state">
+          Nothing on your list yet. Add a task to get started.
+        </p>
+      </div>
     </section>
+
     <script src="scripts/checklist.js" defer></script>
     <script src="scripts/sidebar.js" defer></script>
+    <script src="scripts/task-panel.js" defer></script>
   </body>
 </html>
