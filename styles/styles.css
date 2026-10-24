@@ -20,6 +20,10 @@ body {
   margin: 0px;
 }
 
+html.auth-pending body {
+  visibility: hidden;
+}
+
 nav {
   display: flex;
   justify-content: space-around;

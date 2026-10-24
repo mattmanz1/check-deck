@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+  --ink: #352e27;
+  --muted: #70665b;
+  --paper: #fffdf8;
+  --page: #f7f3eb;
+  --line: #ded5c8;
+  --green: #35694d;
+  --red: #a43436;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: "Pixelify Sans", sans-serif;
+}
+
+html.auth-pending body {
+  visibility: hidden;
+}
+
+.account-header {
+  min-height: 64px;
+  padding: 12px max(24px, calc((100% - 800px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.back-link {
+  color: var(--green);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.account-layout {
+  width: min(100% - 32px, 800px);
+  margin: 42px auto 72px;
+}
+
+.page-heading {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--green);
+  font-size: 0.9rem;
+}
+
+h1,
+h2,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.account-email,
+.settings-section > p {
+  color: var(--muted);
+}
+
+.account-email {
+  margin: 8px 0 0;
+}
+
+.settings-section {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+
+.settings-section h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.settings-section > p {
+  margin: 8px 0 18px;
+}
+
+.settings-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.settings-form label {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.settings-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #bcb1a2;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.button {
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.button-primary {
+  justify-self: start;
+  background: var(--green);
+  color: white;
+}
+
+.button-secondary {
+  border-color: var(--green);
+  background: transparent;
+  color: var(--green);
+}
+
+.button-danger {
+  justify-self: start;
+  background: var(--red);
+  color: white;
+}
+
+.danger-section {
+  border-top-color: #d7a5a0;
+}
+
+.form-message {
+  grid-column: 1 / -1;
+  min-height: 1.4em;
+  margin: 2px 0 0;
+  color: var(--green);
+}
+
+.form-message[data-error="true"] {
+  color: var(--red);
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid #d79536;
+  outline-offset: 3px;
+}
+
+@media (max-width: 540px) {
+  .account-header {
+    padding-inline: 16px;
+  }
+
+  .account-layout {
+    margin-top: 28px;
+  }
+
+  .settings-form {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-form label {
+    grid-column: 1;
+  }
+
+  .settings-form button {
+    justify-self: stretch;
+  }
+}
