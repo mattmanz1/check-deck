@@ -1,5 +1,6 @@
 import {
     createUserWithEmailAndPassword,
+    onAuthStateChanged,
     signInWithEmailAndPassword,
     updateProfile
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
@@ -17,6 +18,12 @@ const submitButton = document.getElementById("submit-btn");
 const authForm = document.getElementById("auth-form");
 const authMessage = document.getElementById("auth-message");
 let isSignUp = false;
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        window.location.replace("main.html");
+    }
+});
 
 function setAuthMode(signUp) {
     isSignUp = signUp;
@@ -85,8 +92,14 @@ authForm.addEventListener("submit", async (event) => {
     }
 });
 
-document.getElementById("show-password").addEventListener("change", (event) => {
-    const inputType = event.currentTarget.checked ? "text" : "password";
-    passwordInput.type = inputType;
-    confirmPasswordInput.type = inputType;
+document.querySelectorAll(".toggle-password").forEach((toggleButton) => {
+    toggleButton.addEventListener("click", () => {
+        const input = document.getElementById(toggleButton.dataset.target);
+        const isVisible = input.type === "text";
+
+        input.type = isVisible ? "password" : "text";
+        toggleButton.setAttribute("aria-pressed", String(!isVisible));
+        toggleButton.setAttribute("aria-label", `${isVisible ? "Show" : "Hide"} password`);
+        toggleButton.title = `${isVisible ? "Show" : "Hide"} password`;
+    });
 });

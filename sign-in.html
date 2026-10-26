@@ -51,22 +51,32 @@
                 <!-- Password -->
                 <div>
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" autocomplete="current-password" required minlength="6">
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" autocomplete="current-password" required minlength="6">
+                        <button type="button" class="toggle-password" data-target="password" aria-label="Show password" aria-pressed="false" title="Show password">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                                <circle cx="12" cy="12" r="2.5"></circle>
+                                <path class="eye-slash" d="m4 4 16 16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Confirm password for signup -->
                 <div id="confirm-field" hidden>
                     <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password">
+                    <div class="password-field">
+                        <input type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password">
+                        <button type="button" class="toggle-password" data-target="confirm-password" aria-label="Show password" aria-pressed="false" title="Show password">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                                <circle cx="12" cy="12" r="2.5"></circle>
+                                <path class="eye-slash" d="m4 4 16 16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Show password -->
-                <label>
-                    <input type="checkbox" id="show-password">
-                    Show Password
-                </label>
-
-                <br>
 
                 <!-- Submit form -->
                 <button type="submit" id="submit-btn">Log In</button>
