@@ -14,7 +14,7 @@ const displayNameInput = document.getElementById("display-name");
 const signOutButton = document.getElementById("sign-out");
 
 onAuthStateChanged(auth, (user) => {
-    if (!user) return;
+    if (!user || !accountEmail || !displayNameInput) return;
     accountEmail.textContent = user.email || "";
     displayNameInput.value = user.displayName || "";
 });
@@ -48,7 +48,7 @@ async function reauthenticate(user, password) {
     await reauthenticateWithCredential(user, credential);
 }
 
-signOutButton.addEventListener("click", async () => {
+signOutButton?.addEventListener("click", async () => {
     signOutButton.disabled = true;
     try {
         await signOut(auth);
@@ -59,7 +59,7 @@ signOutButton.addEventListener("click", async () => {
     }
 });
 
-document.getElementById("name-form").addEventListener("submit", async (event) => {
+document.getElementById("name-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = event.currentTarget.querySelector("button[type='submit']");
     const user = auth.currentUser;
@@ -78,7 +78,7 @@ document.getElementById("name-form").addEventListener("submit", async (event) =>
     }
 });
 
-document.getElementById("password-form").addEventListener("submit", async (event) => {
+document.getElementById("password-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const button = form.querySelector("button[type='submit']");
@@ -108,7 +108,7 @@ document.getElementById("password-form").addEventListener("submit", async (event
     }
 });
 
-document.getElementById("delete-form").addEventListener("submit", async (event) => {
+document.getElementById("delete-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const button = form.querySelector("button[type='submit']");

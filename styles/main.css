@@ -118,6 +118,28 @@ body.sidebar-collapsed .nav-toggle span {
   transition: left 0.3s ease;
 }
 
+.sign-out-button {
+  position: absolute;
+  right: 20px;
+  padding: 8px 14px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fffdf8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sign-out-button:hover,
+.sign-out-button:focus-visible {
+  background: #705b43;
+}
+
+.sign-out-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 body.sidebar-collapsed .top-header {
   left: 0;
 }
