@@ -89,6 +89,10 @@
       >
         <div class="checklist-heading">
           <h2>My Tasks</h2>
+          <p id="task-status" class="task-status" role="status" aria-live="polite">
+            Loading your tasks...
+          </p>
+          <p id="task-error" class="task-error" role="alert" hidden></p>
         </div>
 
         <form id="task-form" class="task-form">
@@ -103,14 +107,15 @@
             maxlength="120"
             placeholder="What needs doing?"
             required
+            disabled
           >
 
           <label class="timer-option" for="add-timer">
-            <input id="add-timer" type="checkbox">
+            <input id="add-timer" type="checkbox" disabled>
             Add timer
           </label>
 
-          <button class="primary-button" type="submit">
+          <button class="primary-button" type="submit" disabled>
             Add task
           </button>
         </form>
@@ -127,7 +132,7 @@
       </div>
     </section>
 
-    <script src="scripts/checklist.js" defer></script>
+    <script type="module" src="scripts/checklist.js"></script>
     <script src="scripts/sidebar.js" defer></script>
     <script src="scripts/task-panel.js" defer></script>
     <script type="module" src="scripts/account.js"></script>
