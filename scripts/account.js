@@ -149,7 +149,7 @@ document.getElementById("delete-form")?.addEventListener("submit", async (event)
     showMessage("delete-message", "");
     try {
         await reauthenticate(user, form.elements.deletePassword.value);
-        showMessage("delete-message", "Deleting your tasks and account. Keep this page open.");
+        showMessage("delete-message", "Deleting your account. Keep this page open until you are redirected to the sign-in page.");
         await deleteAccountData(user);
         window.location.replace("sign-in.html");
     } catch (error) {

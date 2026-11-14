@@ -1,6 +1,6 @@
 import {
-  addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query,
-  serverTimestamp, updateDoc, runTransaction, Timestamp,
+  collection, deleteDoc, doc, onSnapshot, orderBy, query,
+  serverTimestamp, updateDoc, runTransaction, Timestamp, setDoc,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth, db } from "./firebase.js";
@@ -19,12 +19,16 @@ function taskDocument(user, taskId) {
   return doc(taskCollection(user), taskId);
 }
 
-export function createTask(user, title, hasTimer = false) {
-  const tasks = taskCollection(user);
+export function newTaskId(user) {
+  return doc(taskCollection(user)).id;
+}
+
+export function createTask(user, taskId, title, hasTimer = false) {
+  const task = taskDocument(user, taskId);
   if (typeof title !== "string" || !title.trim() || title.trim().length > 120) {
     throw new Error("Task title must contain between 1 and 120 characters.");
   }
-  return addDoc(tasks, {
+  return setDoc(task, {
     title: title.trim(),
     status: "not-started",
     createdAt: serverTimestamp(),
