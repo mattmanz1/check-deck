@@ -1,2 +1,5 @@
 .env
 scripts/firebase-config.js
+node_modules/
+firebase-debug.log
+firestore-debug.log
