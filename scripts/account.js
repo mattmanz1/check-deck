@@ -7,7 +7,31 @@ import {
     updatePassword,
     updateProfile
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
+import { collection, doc, getDocsFromServer, limit, query, runTransaction, writeBatch } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+async function deleteAccountData(user) {
+    const marker = doc(db, "users", user.uid);
+    await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(marker);
+        if (!snapshot.exists()) transaction.set(marker, { deletionInProgress: true });
+        else if (snapshot.data().deletionInProgress !== true) {
+            throw new Error("Account deletion could not be started. Contact an administrator.");
+        }
+    });
+
+    const tasks = collection(db, "users", user.uid, "tasks");
+    while (true) {
+        if (auth.currentUser !== user) throw new Error("Your session changed. Sign in again to resume deletion.");
+        const snapshot = await getDocsFromServer(query(tasks, limit(400)));
+        if (snapshot.empty) break;
+        const batch = writeBatch(db);
+        snapshot.docs.forEach((task) => batch.delete(task.ref));
+        await batch.commit();
+    }
+    if (auth.currentUser !== user) throw new Error("Your session changed. Sign in again to resume deletion.");
+    await deleteUser(user);
+}
 
 const accountEmail = document.getElementById("account-email");
 const displayNameInput = document.getElementById("display-name");
@@ -125,10 +149,11 @@ document.getElementById("delete-form")?.addEventListener("submit", async (event)
     showMessage("delete-message", "");
     try {
         await reauthenticate(user, form.elements.deletePassword.value);
-        await deleteUser(user);
+        showMessage("delete-message", "Deleting your account. Keep this page open until you are redirected to the sign-in page.");
+        await deleteAccountData(user);
         window.location.replace("sign-in.html");
     } catch (error) {
-        showMessage("delete-message", getAuthErrorMessage(error), true);
+        showMessage("delete-message", `Deletion was not completed. Sign in and retry to resume cleanup. ${getAuthErrorMessage(error)}`, true);
         button.disabled = false;
     }
 });
