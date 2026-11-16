@@ -2,21 +2,23 @@
 <!DOCTYPE html>
 <html lang="en" class="auth-pending">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link
       rel="icon"
       type="image/x-icon"
       href="images/study-buddy-favicon.png"
     >
+
     <link rel="stylesheet" href="styles/styles.css">
     <script type="module" src="scripts/auth-guard.js"></script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Study Buddy | Home</title>
   </head>
 
   <body>
+    <!-- Navigation toggle -->
     <button
       id="nav-toggle"
       class="nav-toggle"
@@ -28,11 +30,20 @@
       <span aria-hidden="true">×</span>
     </button>
 
+    <!-- Header -->
     <header class="top-header">
       Welcome back, <span class="username"></span>!
-      <button id="sign-out" class="sign-out-button" type="button">Sign Out</button>
+
+      <button
+        id="sign-out"
+        class="sign-out-button"
+        type="button"
+      >
+        Sign Out
+      </button>
     </header>
 
+    <!-- Sidebar -->
     <aside class="sidebar">
       <nav id="main-nav">
         <a href="main.html">Game</a>
@@ -42,23 +53,31 @@
       </nav>
     </aside>
 
+    <!-- Full background Study Buddy area -->
     <main class="main-screen">
-      <section id="buddy" class="buddy-area">
-        <div class="welcome-panel">
+      <section
+        id="buddy"
+        class="buddy-area"
+        aria-label="Study Buddy home"
+      >
+        <!-- <div class="welcome-panel">
           <h1>Study Buddy</h1>
+
           <p>Your space to focus, study, and grow.</p>
 
           <div
             class="buddy-placeholder"
-            aria-label="Study Buddy character"
+            role="img"
+            aria-label="Books representing your Study Buddy"
           >
             📚
           </div>
 
           <p class="buddy-message">
-            Ready to get things done? Add a task below to get started!
+            Ready to get things done?
+            Add a task below to get started!
           </p>
-        </div>
+        </div> -->
       </section>
     </main>
 
@@ -87,11 +106,8 @@
         class="task-panel-content"
         inert
       >
-        <div class="checklist-heading">
-          <h2>My Tasks</h2>
-        </div>
 
-        <form id="task-form" class="task-form">
+      <form id="task-form" class="task-form">
           <label class="sr-only" for="task-input">
             New task
           </label>
@@ -106,7 +122,10 @@
           >
 
           <label class="timer-option" for="add-timer">
-            <input id="add-timer" type="checkbox">
+            <input
+              id="add-timer"
+              type="checkbox"
+            >
             Add timer
           </label>
 
@@ -119,14 +138,17 @@
           id="task-list"
           class="task-list"
           aria-live="polite"
+          aria-label="Your tasks"
         ></ul>
 
         <p id="empty-state" class="empty-state">
-          Nothing on your list yet. Add a task to get started.
+          Nothing on your list yet.
+          Add a task to get started.
         </p>
       </div>
     </section>
 
+    <!-- Scripts -->
     <script src="scripts/checklist.js" defer></script>
     <script src="scripts/sidebar.js" defer></script>
     <script src="scripts/task-panel.js" defer></script>

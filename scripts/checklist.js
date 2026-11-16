@@ -55,9 +55,17 @@ function renderTask(task) {
     option.textContent = label;
     status.append(option);
   }
+
+  // Updates both the data model and the visible dropdown/attribute
+  const setTaskStatus = (newStatus) => {
+    task.status = newStatus;
+    item.dataset.status = newStatus;
+    status.value = newStatus;
+  };
+
+  // Manual dropdown changes still work anytime
   status.addEventListener("change", () => {
-    task.status = status.value;
-    item.dataset.status = task.status;
+    setTaskStatus(status.value);
   });
 
   const remove = document.createElement("button");
@@ -77,7 +85,7 @@ function renderTask(task) {
   item.append(main);
 
   if (task.timer) {
-    item.append(createTimerPanel(task));
+    item.append(createTimerPanel(task, setTaskStatus));
   } else {
     const enableTimer = document.createElement("button");
     enableTimer.className = "timer-toggle";
@@ -85,7 +93,7 @@ function renderTask(task) {
     enableTimer.textContent = "Add timer";
     enableTimer.addEventListener("click", () => {
       task.timer = { remaining: 25 * 60, interval: null };
-      enableTimer.replaceWith(createTimerPanel(task));
+      enableTimer.replaceWith(createTimerPanel(task, setTaskStatus));
     });
     item.append(enableTimer);
   }
@@ -94,7 +102,7 @@ function renderTask(task) {
   updateTaskCount();
 }
 
-function createTimerPanel(task) {
+function createTimerPanel(task, setTaskStatus) {
   const panel = document.createElement("div");
   panel.className = "timer-panel";
 
@@ -106,46 +114,57 @@ function createTimerPanel(task) {
   const controls = document.createElement("div");
   controls.className = "timer-controls";
 
-  const minutes = document.createElement("input");
-  minutes.type = "number";
-  minutes.min = "0";
-  minutes.max = "999";
-  minutes.value = String(Math.floor(task.timer.remaining / 60));
-  minutes.setAttribute("aria-label", `Timer minutes for ${task.title}`);
+  const timeInput = document.createElement("input");
+  timeInput.className = "quick-time-input";
+  timeInput.type = "text";
+  timeInput.placeholder = "e.g. 25 or 15:30";
+  timeInput.title = "Type minutes (25), mm:ss (15:30), or 1h 20m and press Enter";
+  timeInput.setAttribute("aria-label", `Set timer for ${task.title}`);
 
-  const seconds = document.createElement("input");
-  seconds.type = "number";
-  seconds.min = "0";
-  seconds.max = "59";
-  seconds.value = String(task.timer.remaining % 60).padStart(2, "0");
-  seconds.setAttribute("aria-label", `Timer seconds for ${task.title}`);
+  const applyTime = () => {
+    const raw = timeInput.value.trim();
+    if (!raw) return;
 
-  const setTime = document.createElement("button");
-  setTime.type = "button";
-  setTime.textContent = "Set time";
-  setTime.addEventListener("click", () => {
-    const minuteValue = Number(minutes.value);
-    const secondValue = Number(seconds.value);
-    if (!minutes.value || !seconds.value || minuteValue < 0 || minuteValue > 999 || secondValue < 0 || secondValue > 59) {
-      minutes.setCustomValidity("Enter 0-999 minutes and 0-59 seconds.");
-      minutes.reportValidity();
+    const seconds = parseDuration(raw);
+    if (seconds === null || seconds <= 0 || seconds > 59999) {
+      timeInput.setCustomValidity("Try formats like 25, 15:30, or 1h 15m");
+      timeInput.reportValidity();
       return;
     }
 
-    minutes.setCustomValidity("");
-    task.timer.remaining = minuteValue * 60 + secondValue;
+    timeInput.setCustomValidity("");
+    stopTimer(task);
+    task.timer.remaining = seconds;
     display.textContent = formatTime(task.timer.remaining);
+    timeInput.value = "";
+  };
+
+  timeInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      applyTime();
+    }
   });
+  timeInput.addEventListener("change", applyTime);
 
   const start = document.createElement("button");
+  start.className = "start-timer";
   start.type = "button";
   start.textContent = "Start";
   start.addEventListener("click", () => {
     if (task.timer.interval || task.timer.remaining <= 0) return;
+
+    // Automatically set status to "In progress" when timer starts
+    setTaskStatus("in-progress");
+
     task.timer.interval = window.setInterval(() => {
       task.timer.remaining -= 1;
       display.textContent = formatTime(task.timer.remaining);
-      if (task.timer.remaining <= 0) stopTimer(task);
+      if (task.timer.remaining <= 0) {
+        stopTimer(task);
+        // Automatically set status to "Completed" when timer finishes
+        setTaskStatus("completed");
+      }
     }, 1000);
   });
 
@@ -155,9 +174,39 @@ function createTimerPanel(task) {
   stop.textContent = "Stop";
   stop.addEventListener("click", () => stopTimer(task));
 
-  controls.append(minutes, seconds, setTime, start, stop);
+  controls.append(timeInput, start, stop);
   panel.append(display, controls);
   return panel;
+}
+
+function parseDuration(input) {
+  const clean = input.toLowerCase().trim();
+
+  if (/^\d{1,3}:\d{1,2}$/.test(clean)) {
+    const [mins, secs] = clean.split(":").map(Number);
+    if (secs >= 60) return null;
+    return mins * 60 + secs;
+  }
+
+  if (/^\d+(\.\d+)?$/.test(clean)) {
+    return Math.round(Number(clean) * 60);
+  }
+
+  const unitRegex = /(\d+(?:\.\d+)?)\s*(h|m|s)/g;
+  let totalSeconds = 0;
+  let matched = false;
+  let match;
+
+  while ((match = unitRegex.exec(clean)) !== null) {
+    matched = true;
+    const value = Number(match[1]);
+    const unit = match[2];
+    if (unit === "h") totalSeconds += value * 3600;
+    if (unit === "m") totalSeconds += value * 60;
+    if (unit === "s") totalSeconds += value;
+  }
+
+  return matched ? Math.round(totalSeconds) : null;
 }
 
 function stopTimer(task) {
