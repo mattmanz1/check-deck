@@ -67,7 +67,7 @@ a:focus-visible {
 /* Landing and sign-in navigation */
 body > header nav {
   display: flex;
-  justify-content: space-around;
+  justify-content: left;
   padding: 20px;
   background: var(--dark-sea);
   color: var(--pink);
@@ -77,10 +77,10 @@ body > header nav {
 body > header nav a {
   padding: 5px 20px;
   margin: 10px;
-  border-radius: 10px;
-  background: var(--sea);
+  background: var(--dark-sea);
   color: inherit;
   text-decoration: none;
+  border: solid var(--sea) 6px;
 }
 
 /* Main page */
