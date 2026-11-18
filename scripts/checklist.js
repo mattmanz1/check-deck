@@ -1,7 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth } from "./firebase.js";
-import { createTask, newTaskId, deleteTask, subscribeToTasks, updateTask, setTimer, startTimer, pauseTimer, expireTimer } from "./tasks.js";
-import { Timestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { createTask, deleteTask, subscribeToTasks, updateTask, setTimer, startTimer, pauseTimer, expireTimer } from "./tasks.js";
 
 const taskForm = document.querySelector("#task-form");
 const taskInput = document.querySelector("#task-input");
@@ -18,10 +17,7 @@ let sessionGeneration = 0;
 let firstServerSnapshotReceived = false;
 let tasks = [];
 let confirmedTasks = [];
-let operations = [];
-let retryTimer = null;
-let pendingNotice = null;
-let processing = false;
+const pendingWrites = new Set();
 const timerIntervals = new Map();
 const expiringTimers = new Set();
 
@@ -34,11 +30,7 @@ onAuthStateChanged(auth, (user) => {
   unsubscribeTasks = null;
   currentUser = user;
   firstServerSnapshotReceived = false;
-  clearTimeout(retryTimer);
-  retryTimer = null;
-  clearTimeout(pendingNotice);
-  operations = [];
-  processing = false;
+  pendingWrites.clear();
   tasks = [];
   confirmedTasks = [];
   taskForm.reset();
@@ -62,14 +54,17 @@ onAuthStateChanged(auth, (user) => {
         setTaskStatus("Waiting for a connection to load your tasks...");
         return;
       }
+      tasks = nextTasks;
+      reconcileTasks();
       if (!metadata.fromCache && !metadata.hasPendingWrites) {
         confirmedTasks = nextTasks;
         firstServerSnapshotReceived = true;
+        setTaskStatus("Tasks synced.");
+        setTaskActionsDisabled(false);
+      } else {
+        setTaskStatus("Waiting for the server to confirm your tasks...");
+        setTaskActionsDisabled(true);
       }
-      if (!operations.length) confirmedTasks = nextTasks;
-      refreshTasks();
-      updateSyncStatus(metadata.fromCache || metadata.hasPendingWrites);
-      setTaskActionsDisabled(!firstServerSnapshotReceived);
     },
     (error) => {
       if (generation !== sessionGeneration || auth.currentUser !== user) return;
@@ -80,19 +75,26 @@ onAuthStateChanged(auth, (user) => {
   );
 });
 
-taskForm.addEventListener("submit", (event) => {
+taskForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!readyForWrites()) return;
   const title = taskInput.value.trim();
   if (!title) return;
-  const user = currentUser;
-  const id = newTaskId(user);
-  const hasTimer = addTimerInput.checked;
-  const task = { id, title, status: "not-started", timer: hasTimer ? { remainingSeconds: 1500, state: "paused", endsAt: null } : null };
-  enqueue({ apply: (list) => [...list.filter((item) => item.id !== id), task], save: () => createTask(user, id, title, hasTimer) });
-  taskInput.value = "";
-  addTimerInput.checked = false;
-  taskInput.focus();
+  const generation = sessionGeneration;
+  setWritePending("new-task", true);
+  clearError();
+  try {
+    await createTask(currentUser, title, addTimerInput.checked);
+    if (generation === sessionGeneration) {
+      taskInput.value = "";
+      addTimerInput.checked = false;
+      taskInput.focus();
+    }
+  } catch (error) {
+    if (generation === sessionGeneration) showError(`Task could not be saved. ${readableError(error)}`);
+  } finally {
+    setWritePending("new-task", false);
+  }
 });
 
 function renderTask(task) {
@@ -144,21 +146,61 @@ function renderTask(task) {
   return item;
 }
 
-function addTaskTimer(task) {
+async function addTaskTimer(task, button) {
   if (!readyForWrites()) return;
-  queueTimer(task, { remainingSeconds: 1500, state: "paused", endsAt: null }, (user) => setTimer(user, task.id, 1500));
+  const generation = sessionGeneration;
+  button.disabled = true;
+  setWritePending(task.id, true);
+  clearError();
+  try {
+    await setTimer(currentUser, task.id, 1500);
+  } catch (error) {
+    if (generation === sessionGeneration) {
+      restoreConfirmedTasks();
+      showError(`Timer could not be saved. ${readableError(error)}`);
+    }
+  } finally {
+    setWritePending(task.id, false);
+    button.disabled = !firstServerSnapshotReceived;
+  }
 }
 
-function changeStatus(task, select) {
+async function changeStatus(task, select) {
   if (!readyForWrites()) return;
-  const user = currentUser, value = select.value;
-  enqueue({ apply: (list) => list.map((item) => item.id === task.id ? { ...item, status: value } : item), save: () => updateTask(user, task.id, { status: value }) });
+  const generation = sessionGeneration;
+  setWritePending(task.id, true);
+  select.disabled = true;
+  clearError();
+  try {
+    await updateTask(currentUser, task.id, { status: select.value });
+  } catch (error) {
+    if (generation === sessionGeneration) {
+      restoreConfirmedTasks();
+      showError(`Task status could not be saved. ${readableError(error)}`);
+    }
+  } finally {
+    setWritePending(task.id, false);
+    select.disabled = !firstServerSnapshotReceived;
+  }
 }
 
-function removeTask(task) {
+async function removeTask(task, button) {
   if (!readyForWrites()) return;
-  const user = currentUser;
-  enqueue({ apply: (list) => list.filter((item) => item.id !== task.id), save: () => deleteTask(user, task.id) });
+  const generation = sessionGeneration;
+  setWritePending(task.id, true);
+  button.disabled = true;
+  clearError();
+  try {
+    await deleteTask(currentUser, task.id);
+  } catch (error) {
+    if (generation === sessionGeneration) {
+      restoreConfirmedTasks();
+      showError(`Task could not be removed. ${readableError(error)}`);
+    }
+  } finally {
+    setWritePending(task.id, false);
+    button.disabled = !firstServerSnapshotReceived;
+  }
 }
 
 function reconcileTasks() {
@@ -202,26 +244,15 @@ function createTimerPanel(task) {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = label;
-    button.addEventListener("click", action);
+    button.addEventListener("click", () => runTimerAction(task, button, action));
     return button;
   };
   const set = makeButton("Set time", () => {
     const m = Number(minutes.value), s = Number(seconds.value);
-    if (!minutes.value.trim() || !seconds.value.trim() || !Number.isInteger(m) || !Number.isInteger(s) || m < 0 || s < 0 || s > 59 || m * 60 + s > 60000) {
-      showError("Enter whole minutes and seconds, up to 1000 minutes total.");
-      return;
-    }
-    const value = m * 60 + s;
-    if (task.timer.state === "running") { showError("Pause the timer before setting its duration."); return; }
-    queueTimer(task, { remainingSeconds: value, state: "paused", endsAt: null }, (user) => setTimer(user, task.id, value));
+    if (!minutes.value.trim() || !seconds.value.trim() || !Number.isInteger(m) || !Number.isInteger(s) || m < 0 || s < 0 || s > 59 || m * 60 + s > 60000) throw new Error("Enter whole minutes and seconds, up to 1000 minutes total.");
+    return setTimer(currentUser, task.id, m * 60 + s);
   });
-  controls.append(minutes, seconds, set, makeButton("Start", () => {
-    if (task.timer.state !== "paused" || task.timer.remainingSeconds <= 0) return;
-    queueTimer(task, { ...task.timer, state: "running", endsAt: Timestamp.fromMillis(Date.now() + task.timer.remainingSeconds * 1000) }, (user) => startTimer(user, task.id));
-  }), makeButton("Pause", () => {
-    if (task.timer.state !== "running") return;
-    queueTimer(task, { remainingSeconds: remaining(task.timer), state: "paused", endsAt: null }, (user) => pauseTimer(user, task.id));
-  }));
+  controls.append(minutes, seconds, set, makeButton("Start", () => startTimer(currentUser, task.id)), makeButton("Pause", () => pauseTimer(currentUser, task.id)));
   panel.append(display, controls);
   const generation = sessionGeneration;
   const tick = () => {
@@ -229,12 +260,9 @@ function createTimerPanel(task) {
     display.textContent = `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
     if (task.timer.state === "running" && value === 0 && !expiringTimers.has(task.id)) {
       expiringTimers.add(task.id);
-      const user = currentUser;
-      queueMicrotask(() => {
-        if (generation !== sessionGeneration) return;
-        enqueue({ apply: (list) => list.map((item) => item.id === task.id && item.timer?.state === "running" && item.timer.endsAt.isEqual(task.timer.endsAt) ? { ...item, timer: { remainingSeconds: 0, state: "paused", endsAt: null } } : item), save: () => expireTimer(user, task.id, task.timer.endsAt) });
-        expiringTimers.delete(task.id);
-      });
+      expireTimer(currentUser, task.id, task.timer.endsAt).catch((error) => {
+        if (generation === sessionGeneration) showError(`Timer could not be stopped. ${readableError(error)}`);
+      }).finally(() => { if (generation === sessionGeneration) expiringTimers.delete(task.id); });
       clearInterval(timerIntervals.get(task.id));
       timerIntervals.delete(task.id);
     }
@@ -244,6 +272,7 @@ function createTimerPanel(task) {
   return panel;
 }
 
+<<<<<<< HEAD
 function parseDuration(input) {
   const clean = input.toLowerCase().trim();
 
@@ -285,6 +314,25 @@ function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
   const seconds = (totalSeconds % 60).toString().padStart(2, "0");
   return `${minutes}:${seconds}`;
+=======
+async function runTimerAction(task, button, action) {
+  if (!readyForWrites()) return;
+  const generation = sessionGeneration;
+  button.disabled = true;
+  clearError();
+  try { await action(); }
+  catch (error) { if (generation === sessionGeneration) showError(`Timer could not be updated. ${readableError(error)}`); }
+  finally { if (generation === sessionGeneration) button.disabled = false; }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) reconcileTasks();
+});
+
+function restoreConfirmedTasks() {
+  tasks = confirmedTasks;
+  reconcileTasks();
+>>>>>>> parent of b8b7b0f (Added testing for firestore)
 }
 
 function updateTaskCount() {
@@ -300,6 +348,12 @@ function readyForWrites() {
 function setTaskActionsDisabled(disabled) {
   taskForm.querySelectorAll("input, button").forEach((control) => { control.disabled = disabled; });
   taskList.querySelectorAll("button, select").forEach((control) => { control.disabled = disabled; });
+}
+
+function setWritePending(key, pending) {
+  if (pending) pendingWrites.add(key);
+  else pendingWrites.delete(key);
+  taskForm.querySelector('button[type="submit"]').disabled = !readyForWrites() || pendingWrites.has("new-task");
 }
 
 function setTaskStatus(message) { taskStatus.textContent = message; }
