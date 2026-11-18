@@ -838,3 +838,7 @@ h1 {
     padding: 20px;
   }
 }
+
+.pixel-art {
+  image-rendering: pixelated;
+}
