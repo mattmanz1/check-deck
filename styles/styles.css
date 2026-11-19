@@ -769,6 +769,11 @@ h1 {
 .toggle-password[aria-pressed="true"] .eye-slash {
   display: none;
 }
+
+.task-status {
+  margin-left: 24px;
+}
+
 .checkbox-label {
   display: flex;
   align-items: center;

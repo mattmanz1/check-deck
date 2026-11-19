@@ -272,49 +272,6 @@ function createTimerPanel(task) {
   return panel;
 }
 
-<<<<<<< HEAD
-function parseDuration(input) {
-  const clean = input.toLowerCase().trim();
-
-  if (/^\d{1,3}:\d{1,2}$/.test(clean)) {
-    const [mins, secs] = clean.split(":").map(Number);
-    if (secs >= 60) return null;
-    return mins * 60 + secs;
-  }
-
-  if (/^\d+(\.\d+)?$/.test(clean)) {
-    return Math.round(Number(clean) * 60);
-  }
-
-  const unitRegex = /(\d+(?:\.\d+)?)\s*(h|m|s)/g;
-  let totalSeconds = 0;
-  let matched = false;
-  let match;
-
-  while ((match = unitRegex.exec(clean)) !== null) {
-    matched = true;
-    const value = Number(match[1]);
-    const unit = match[2];
-    if (unit === "h") totalSeconds += value * 3600;
-    if (unit === "m") totalSeconds += value * 60;
-    if (unit === "s") totalSeconds += value;
-  }
-
-  return matched ? Math.round(totalSeconds) : null;
-}
-
-function stopTimer(task) {
-  if (task.timer?.interval) {
-    window.clearInterval(task.timer.interval);
-    task.timer.interval = null;
-  }
-}
-
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
-  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-  return `${minutes}:${seconds}`;
-=======
 async function runTimerAction(task, button, action) {
   if (!readyForWrites()) return;
   const generation = sessionGeneration;
@@ -332,7 +289,6 @@ document.addEventListener("visibilitychange", () => {
 function restoreConfirmedTasks() {
   tasks = confirmedTasks;
   reconcileTasks();
->>>>>>> parent of b8b7b0f (Added testing for firestore)
 }
 
 function updateTaskCount() {
